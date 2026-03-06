@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>AgriPulse Dashboard</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f5f7fa;
+padding:40px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.banner{
+width:100%;
+border-radius:10px;
+margin-bottom:25px;
+}
+
+form{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:30px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+select,input,button{
+padding:10px;
+margin-top:10px;
+}
+
+button{
+background:#2ecc71;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#27ae60;
+}
+
+.card{
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+color:white;
+}
+
+.green{
+background:#2ecc71;
+}
+
+.yellow{
+background:#f1c40f;
+color:black;
+}
+
+.red{
+background:#e74c3c;
+}
+
+.metric{
+margin:8px 0;
+font-size:15px;
+}
+
+.icon{
+width:20px;
+vertical-align:middle;
+margin-right:6px;
+}
+
+.cropicon{
+width:60px;
+margin-top:5px;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h1>🌱 AgriPulse Soil Analyzer</h1>
+
+<img class="banner" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef">
+
+<form method="POST" enctype="multipart/form-data">
+
+<label><b>Select Target Crop</b></label>
+
+<br>
+
+<select name="crop">
+
+<option value="TOMATO">Tomato</option>
+<option value="WHEAT">Wheat</option>
+<option value="RICE">Rice</option>
+<option value="MAIZE">Maize</option>
+
+</select>
+
+<br><br>
+
+<label><b>Upload Soil CSV File</b></label>
+
+<br>
+
+<input type="file" name="file" required>
+
+<br><br>
+
+<button type="submit">Analyze Soil</button>
+
+</form>
+
+
+{% if results %}
+
+<h2>📊 Analysis Results</h2>
+
+{% for r in results %}
+
+{% set score = r.recommendation.suitability_score %}
+
+{% if score >= 80 %}
+<div class="card green">
+
+{% elif score >= 50 %}
+<div class="card yellow">
+
+{% else %}
+<div class="card red">
+
+{% endif %}
+
+<h3>Soil ID: {{ r.soil_id }}</h3>
+
+<img class="cropicon" src="https://cdn-icons-png.flaticon.com/512/2909/2909763.png">
+
+<p class="metric">🌾 <b>Crop:</b> {{ r.target_crop }}</p>
+
+<p class="metric">💚 <b>Overall Health:</b> {{ r.health_metrics.overall_health }}</p>
+
+<p class="metric">📈 <b>Suitability Score:</b> {{ r.recommendation.suitability_score }}%</p>
+
+<p class="metric">
+<img class="icon" src="https://cdn-icons-png.flaticon.com/512/3076/3076014.png">
+<b>Critical Deficiencies:</b> {{ r.health_metrics.critical_deficiencies }}
+</p>
+
+<p class="metric">
+<img class="icon" src="https://cdn-icons-png.flaticon.com/512/628/628324.png">
+<b>Fertilizer Plan:</b> {{ r.recommendation.fertilizer_plan }}
+</p>
+
+<p class="metric">🤖 <b>AI Insight:</b> {{ r.ai_explanation }}</p>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+</div>
+
+</body>
+
+</html>

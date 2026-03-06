@@ -1,0 +1,3 @@
+soil_id,nitrogen,phosphorus,potassium,ph_level
+SOIL_001,25,20,180,6.5
+SOIL_002,12,18,160,6.2
